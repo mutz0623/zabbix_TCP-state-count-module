@@ -1,3 +1,14 @@
+/* 
+ * zabbix_TCP-state-count-module
+ *
+ * zabbix loadable module for aggregating TCP sessions.
+ *
+ *
+ * mutsumi Iwata
+ *
+ */
+
+
 /*
 ** Zabbix
 ** Copyright (C) 2001-2014 Zabbix SIA
