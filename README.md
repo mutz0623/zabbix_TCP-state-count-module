@@ -50,7 +50,7 @@ or
 $ sudo service zabbix-agent restart
 ```
 
-set item key "net.tcp.count[<src port>,<dest port>,<state>]" in your zabbix server
+set item key "net.tcp.count[\<src port\>,\<dest port\>,\<state\>]" in your zabbix server
 
 
 
