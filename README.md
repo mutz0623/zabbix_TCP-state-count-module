@@ -31,6 +31,7 @@ $ cd -
 download or git clone the code of  this module, and make this.
 ```
 $ git  clone https://github.com/mutz0623/zabbix_TCP-state-count-module.git
+$ cd zabbix_TCP-state-count-module
 $ make
 ```
 modify zabbix_agentd.conf
