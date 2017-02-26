@@ -129,7 +129,7 @@ int	zbx_module_NET_TCP_COUNT(AGENT_REQUEST *request, AGENT_RESULT *result)
 	int	src_port = 0;
 	int	dst_port = 0;
 	int	port_state = 0;
-	char	*port_state_tmp;
+	char	*port_state_tmp = NULL;
 
 	int	count = 0;
 	int	ret = SYSINFO_RET_FAIL;
@@ -297,8 +297,10 @@ int get_port_count(int *ret_count, int src_port, int dst_port, int port_state){
 	char    line[MAX_STRING_LEN], *p;
 	FILE    *f;
 
-	int s_ip[4],s_port;
-	int d_ip[4],d_port;
+	uint8_t s_ip[4];
+	int s_port;
+	uint8_t d_ip[4];
+	int d_port;
 	int num,state;
 	int pad;
 	char padstr[100];
