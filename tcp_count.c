@@ -297,10 +297,8 @@ int get_port_count(int *ret_count, int src_port, int dst_port, int port_state){
 	char    line[MAX_STRING_LEN], *p;
 	FILE    *f;
 
-	uint8_t s_ip[4];
-	int s_port;
-	uint8_t d_ip[4];
-	int d_port;
+	int s_ip[4],s_port;
+	int d_ip[4],d_port;
 	int num,state;
 	int pad;
 	char padstr[100];
