@@ -4,7 +4,7 @@ zabbix loadable module for aggregating TCP sessions.
 
 # Requirements
 
-- zabbix 3.0
+- zabbix 3.0 or later
 - Linux
 
 # How to use
