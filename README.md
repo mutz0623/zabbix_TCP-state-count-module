@@ -9,6 +9,9 @@ zabbix loadable module for aggregating TCP sessions.
 
 # How to use
 
+Below is example for zabbix 3.0.5; but now already released newer version.
+Please replace correct version for your environment.
+
 downlaod and extract zabbix source code
 ```
 $ wget  http://downloads.sourceforge.net/project/zabbix/ZABBIX%20Latest%20Stable/3.0.5/zabbix-3.0.5.tar.gz
