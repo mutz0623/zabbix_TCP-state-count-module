@@ -295,6 +295,7 @@ int get_port_count(int *ret_count, int src_port, int dst_port, int port_state){
 
 	int	ret = SYSINFO_RET_FAIL;
 	char    line[MAX_STRING_LEN], *p;
+	char    readbuf[BUFSIZ];
 	FILE    *f;
 
 	int s_ip[4],s_port;
@@ -309,6 +310,9 @@ int get_port_count(int *ret_count, int src_port, int dst_port, int port_state){
 		return SYSINFO_RET_FAIL;
 	}
 
+	if( 0 != setvbuf(f, readbuf, _IOFBF, sizeof(readbuf)) ){
+	        return SYSINFO_RET_FAIL;
+	}
 
 	while (NULL != fgets(line, sizeof(line), f))
  	{
@@ -338,6 +342,9 @@ int get_port_count(int *ret_count, int src_port, int dst_port, int port_state){
 		return SYSINFO_RET_FAIL;
 	}
 
+	if( 0 != setvbuf(f, readbuf, _IOFBF, sizeof(readbuf)) ){
+	        return SYSINFO_RET_FAIL;
+	}
 
  	while (NULL != fgets(line, sizeof(line), f))
 	{
