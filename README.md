@@ -4,10 +4,13 @@ zabbix loadable module for aggregating TCP sessions.
 
 # Requirements
 
-- zabbix 3.0
+- zabbix 3.0 or later
 - Linux
 
 # How to use
+
+Below is example for zabbix 3.0.5; but now already released newer version.
+Please replace correct version for your environment.
 
 downlaod and extract zabbix source code
 ```
