@@ -311,6 +311,7 @@ int get_port_count(int *ret_count, int src_port, int dst_port, int port_state){
 	}
 
 	if( 0 != setvbuf(f, readbuf, _IOFBF, sizeof(readbuf)) ){
+		fclose(f);
 	        return SYSINFO_RET_FAIL;
 	}
 
@@ -343,6 +344,7 @@ int get_port_count(int *ret_count, int src_port, int dst_port, int port_state){
 	}
 
 	if( 0 != setvbuf(f, readbuf, _IOFBF, sizeof(readbuf)) ){
+		fclose(f);
 	        return SYSINFO_RET_FAIL;
 	}
 
