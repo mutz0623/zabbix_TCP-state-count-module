@@ -33,25 +33,13 @@
 #include "common.h"
 #include "log.h"
 
+#include "tcp_count_netlink.h"
+
 
 extern unsigned char program_type ;
 
 #define MODULE_NAME "tcp_count.so"
 
-enum
-{
-  TCP_ESTABLISHED = 1,
-  TCP_SYN_SENT,
-  TCP_SYN_RECV,
-  TCP_FIN_WAIT1,
-  TCP_FIN_WAIT2,
-  TCP_TIME_WAIT,
-  TCP_CLOSE,
-  TCP_CLOSE_WAIT,
-  TCP_LAST_ACK,
-  TCP_LISTEN,
-  TCP_CLOSING   /* now a valid state */
-};
 
 /* the variable keeps timeout setting for item processing */
 static int	item_timeout = 0;
@@ -286,93 +274,5 @@ int	zbx_module_init(void)
 int	zbx_module_uninit(void)
 {
 	return ZBX_MODULE_OK;
-}
-
-
-int get_port_count(int *ret_count, int src_port, int dst_port, int port_state){
-
-	int count = 0;
-
-	int	ret = SYSINFO_RET_FAIL;
-	char    line[MAX_STRING_LEN], *p;
-	char    readbuf[BUFSIZ];
-	FILE    *f;
-
-	int s_ip[4],s_port;
-	int d_ip[4],d_port;
-	int num,state;
-	int pad;
-	char padstr[100];
-
-
-	errno = 0;
-	if (NULL == (f = fopen("/proc/net/tcp", "r"))){
-		return SYSINFO_RET_FAIL;
-	}
-
-	if( 0 != setvbuf(f, readbuf, _IOFBF, sizeof(readbuf)) ){
-		fclose(f);
-	        return SYSINFO_RET_FAIL;
-	}
-
-	while (NULL != fgets(line, sizeof(line), f))
- 	{
-
-		if (NULL == strstr(line, ":"))
-			continue;
-
-		sscanf(line,"%d: %02x%02x%02x%02x:%04x"
-		            " %02x%02x%02x%02x:%04x %02x %s\n",
-		            &num,&s_ip[3],&s_ip[2],&s_ip[1],&s_ip[0],&s_port,
-		            &d_ip[3],&d_ip[2],&d_ip[1],&d_ip[0],&d_port,&state,&padstr);
-
-		if( src_port == 0 || s_port == src_port ){
-			if( dst_port == 0 || d_port == dst_port ){
-				if( port_state == 0 || state == port_state ){
-					count ++;
-				}
-			}
-		}
-
-	}
-	fclose(f);
-
-#ifdef HAVE_IPV6
-	errno = 0;
-	if (NULL == (f = fopen("/proc/net/tcp6", "r"))){
-		return SYSINFO_RET_FAIL;
-	}
-
-	if( 0 != setvbuf(f, readbuf, _IOFBF, sizeof(readbuf)) ){
-		fclose(f);
-	        return SYSINFO_RET_FAIL;
-	}
-
- 	while (NULL != fgets(line, sizeof(line), f))
-	{
-
-		if (NULL == strstr(line, ":"))
-			continue;
-
-		sscanf(line,"%d: %06x%06x%06x%06x%02x%02x%02x%02x:%04x"
-		            " %06x%06x%06x%06x%02x%02x%02x%02x:%04x %02x %s\n",
-		            &num,&pad,&pad,&pad,&pad,
-		            &s_ip[3],&s_ip[2],&s_ip[1],&s_ip[0],&s_port,
-		            &pad,&pad,&pad,&pad,
-		            &d_ip[3],&d_ip[2],&d_ip[1],&d_ip[0],&d_port,&state,&padstr);
-
-		if( src_port == 0 || s_port == src_port ){
-			if( dst_port == 0 || d_port == dst_port ){
-				if( port_state == 0 || state == port_state ){
-					count ++;
-				}
-			}
-		}
-
-	}
-	fclose(f);
-#endif
-	*ret_count = count;
-	return SYSINFO_RET_OK;
 }
 
