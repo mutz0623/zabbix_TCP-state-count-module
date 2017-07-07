@@ -17,7 +17,7 @@
 
 #define MODULE_NAME "tcp_count.so"
 
-extern int get_port_count(int *, int , int , int );
+extern int get_port_count(int *, int , int , int , int **);
 
 enum
 {

@@ -214,7 +214,7 @@ int	zbx_module_NET_TCP_COUNT(AGENT_REQUEST *request, AGENT_RESULT *result)
 		return SYSINFO_RET_FAIL;
 	}
 
-	ret = get_port_count(&count, src_port, dst_port, port_state);
+	ret = get_port_count(&count, src_port, dst_port, port_state, NULL);
 
 	if(ret == SYSINFO_RET_FAIL ){
 		SET_MSG_RESULT(result, strdup("Error in get_port_count()"));

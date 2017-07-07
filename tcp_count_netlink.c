@@ -76,7 +76,7 @@ ssize_t send_request(int fd, int src_port, int dst_port, int port_state){
 }
 
 
-int recv_and_count(int fd){
+int recv_and_count(int fd, int **counter ){
 	int count_state = 0;
 
 	int recv_status;
@@ -144,7 +144,7 @@ int recv_and_count(int fd){
 }
 
 
-int get_port_count(int *ret_count, int src_port, int dst_port, int port_state){
+int get_port_count(int *ret_count, int src_port, int dst_port, int port_state, int **counter){
 
 	int sock_fd;
 
@@ -170,7 +170,7 @@ int get_port_count(int *ret_count, int src_port, int dst_port, int port_state){
 		return SYSINFO_RET_FAIL;
 	}
 
-	*ret_count = recv_and_count( sock_fd );
+	*ret_count = recv_and_count( sock_fd, counter );
 
 	close(sock_fd);
 
