@@ -32,6 +32,7 @@
 #include "module.h"
 #include "common.h"
 #include "log.h"
+#include "zbxjson.h"
 
 #include "tcp_count_netlink.h"
 
@@ -255,9 +256,12 @@ int	zbx_module_NET_TCP_COUNT_BULK(AGENT_REQUEST *request, AGENT_RESULT *result)
 	int	ret = SYSINFO_RET_FAIL;
 
 	int	counter[TCP_STATE_NUM] = {0};
+	struct	zbx_json json;
+
 
 	zabbix_log(LOG_LEVEL_DEBUG, "[%s] param num [%d] (%s:%d)",
 	           MODULE_NAME, request->nparam, __FILE__, __LINE__ );
+
 	if (request->nparam == 0){
 		src_port = 0;
 		dst_port = 0;
@@ -299,18 +303,35 @@ int	zbx_module_NET_TCP_COUNT_BULK(AGENT_REQUEST *request, AGENT_RESULT *result)
 
 	ret = get_port_count(&count, src_port, dst_port, port_state, &counter[0] );
 
-	int i;
-	for(i=1;i<TCP_STATE_NUM;i++){
-		zabbix_log(LOG_LEVEL_WARNING, "[%s] (%s() %s:%d) %d -> %d (total %d)",
-		            MODULE_NAME, __FUNCTION__,  __FILE__, __LINE__, i, counter[i], count );
-	}
-
 	if(ret == SYSINFO_RET_FAIL ){
 		SET_MSG_RESULT(result, strdup("Error in get_port_count()"));
 		return SYSINFO_RET_FAIL;
 	}
 
-	SET_UI64_RESULT(result, count);
+
+	zbx_json_init(&json, ZBX_JSON_STAT_BUF_LEN);
+	zbx_json_addarray(&json, ZBX_PROTO_TAG_DATA);
+	
+	zbx_json_addobject(&json, NULL);
+	zbx_json_adduint64(&json, "{#TCP sock count ALL}", count);
+	zbx_json_close(&json);
+	
+	int i;
+	for(i=1;i<TCP_STATE_NUM;i++){
+		zbx_json_addobject(&json, NULL);
+		zbx_json_adduint64(&json, "{#TCP sock state}", i);
+		zbx_json_adduint64(&json, "{#TCP sock count}", counter[i]);
+		zbx_json_close(&json);
+
+		zabbix_log(LOG_LEVEL_WARNING, "[%s] (%s() %s:%d) %d -> %d (total %d)",
+		            MODULE_NAME, __FUNCTION__,  __FILE__, __LINE__, i, counter[i], count );
+	}
+	
+	zbx_json_close(&json);
+	SET_STR_RESULT(result, zbx_strdup(result->str, json.buffer));
+	
+	zbx_json_free(&json);
+
 	return SYSINFO_RET_OK;
 }
 
