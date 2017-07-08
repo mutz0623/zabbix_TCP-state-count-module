@@ -45,11 +45,13 @@ extern unsigned char program_type ;
 static int	item_timeout = 0;
 
 int	zbx_module_NET_TCP_COUNT(AGENT_REQUEST *request, AGENT_RESULT *result);
+int	zbx_module_NET_TCP_COUNT_BULK(AGENT_REQUEST *request, AGENT_RESULT *result);
 
 static ZBX_METRIC keys[] =
 /*      KEY                     FLAG		FUNCTION        	TEST PARAMETERS */
 {
 	{"net.tcp.count",	CF_HAVEPARAMS,	zbx_module_NET_TCP_COUNT, "80,0,LISTEN"},
+	{"net.tcp.count.bulk",	CF_HAVEPARAMS,	zbx_module_NET_TCP_COUNT_BULK, "80,0"},
 	{NULL}
 };
 
@@ -215,6 +217,93 @@ int	zbx_module_NET_TCP_COUNT(AGENT_REQUEST *request, AGENT_RESULT *result)
 	}
 
 	ret = get_port_count(&count, src_port, dst_port, port_state, NULL);
+
+	if(ret == SYSINFO_RET_FAIL ){
+		SET_MSG_RESULT(result, strdup("Error in get_port_count()"));
+		return SYSINFO_RET_FAIL;
+	}
+
+	SET_UI64_RESULT(result, count);
+	return SYSINFO_RET_OK;
+}
+
+
+/******************************************************************************
+ *                                                                            *
+ * Function: zbx_module_NET_TCP_COUNT_BULK                                    *
+ *                                                                            *
+ * Purpose: Aggregate TCP connections by port number                          *
+ *          and return json object aggregated with state                      *
+ *                                                                            *
+ * Parameters: source port                                                    *
+ *             destination port                                               *
+ *             int array contains atate                                       *
+ *                                                                            *
+ * Return value: SYSINFO_RET_FAIL - function failed, item will be marked      *
+ *                                 as not supported by zabbix                 *
+ *               SYSINFO_RET_OK - success                                     *
+ *                                                                            *
+ ******************************************************************************/
+int	zbx_module_NET_TCP_COUNT_BULK(AGENT_REQUEST *request, AGENT_RESULT *result)
+{
+	int	src_port = 0;
+	int	dst_port = 0;
+	int	port_state = 0;
+	char	*port_state_tmp = NULL;
+
+	int	count = 0;
+	int	ret = SYSINFO_RET_FAIL;
+
+	int	counter[TCP_STATE_NUM] = {0};
+
+	zabbix_log(LOG_LEVEL_DEBUG, "[%s] param num [%d] (%s:%d)",
+	           MODULE_NAME, request->nparam, __FILE__, __LINE__ );
+	if (request->nparam == 0){
+		src_port = 0;
+		dst_port = 0;
+		port_state = 0;
+
+	}else if (request->nparam == 1){
+
+		src_port = atoi( get_rparam(request, 0) );
+
+		dst_port = 0;
+		port_state = 0;
+
+	}else if (request->nparam == 2){
+
+		src_port = atoi( get_rparam(request, 0) );
+		dst_port = atoi( get_rparam(request, 1) );
+
+		port_state = 0;
+
+	}else{
+		SET_MSG_RESULT(result, strdup("Invalid parameter"));
+		return SYSINFO_RET_FAIL;
+	}
+
+
+	zabbix_log(LOG_LEVEL_DEBUG, 
+	           "[%s] specified srcport,destport,state => %d,%d,%s(%d) (%s:%d)",
+	           MODULE_NAME, src_port, dst_port, port_state_tmp, port_state, __FILE__, __LINE__);
+
+	if( src_port < 0 || src_port >65535 ){
+		SET_MSG_RESULT(result, strdup("Ivalid source port value"));
+		return SYSINFO_RET_FAIL;
+	}
+
+	if( dst_port < 0 || dst_port >65535 ){
+		SET_MSG_RESULT(result, strdup("Ivalid dest port value"));
+		return SYSINFO_RET_FAIL;
+	}
+
+	ret = get_port_count(&count, src_port, dst_port, port_state, &counter[0] );
+
+	int i;
+	for(i=1;i<TCP_STATE_NUM;i++){
+		zabbix_log(LOG_LEVEL_WARNING, "[%s] (%s() %s:%d) %d -> %d (total %d)",
+		            MODULE_NAME, __FUNCTION__,  __FILE__, __LINE__, i, counter[i], count );
+	}
 
 	if(ret == SYSINFO_RET_FAIL ){
 		SET_MSG_RESULT(result, strdup("Error in get_port_count()"));

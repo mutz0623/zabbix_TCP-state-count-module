@@ -76,7 +76,7 @@ ssize_t send_request(int fd, int src_port, int dst_port, int port_state){
 }
 
 
-int recv_and_count(int fd, int **counter ){
+int recv_and_count(int fd, int *counter ){
 	int count_state = 0;
 
 	int recv_status;
@@ -133,6 +133,15 @@ int recv_and_count(int fd, int **counter ){
 
 			r = NLMSG_DATA(h);
 
+			if ( counter != NULL ){
+	
+				counter[r->idiag_state] += 1;
+
+				zabbix_log(LOG_LEVEL_DEBUG, "[%s] in function %s %d@%s recv_status<0, %d %d",
+        			           MODULE_NAME, __FUNCTION__, __LINE__, __FILE__, r->idiag_state,counter[r->idiag_state]);
+
+			}
+
 			count_state ++;
 
 			h = NLMSG_NEXT(h, msglen);
@@ -144,7 +153,7 @@ int recv_and_count(int fd, int **counter ){
 }
 
 
-int get_port_count(int *ret_count, int src_port, int dst_port, int port_state, int **counter){
+int get_port_count(int *ret_count, int src_port, int dst_port, int port_state, int *counter){
 
 	int sock_fd;
 
@@ -171,6 +180,15 @@ int get_port_count(int *ret_count, int src_port, int dst_port, int port_state, i
 	}
 
 	*ret_count = recv_and_count( sock_fd, counter );
+
+	if ( counter  != NULL ){
+		int i= 0;
+		for(i=1;i<TCP_STATE_NUM;i++){
+			zabbix_log(LOG_LEVEL_DEBUG, "[%s] in function %s %d@%s enabled state counter %d -> %d",
+			             MODULE_NAME, __FUNCTION__, __LINE__, __FILE__, i, *( counter + i ) );
+		}
+	}                       		
+
 
 	close(sock_fd);
 
