@@ -28,7 +28,7 @@ install:$(TARGET)
 	tail /var/log/zabbix/zabbix_agentd.log
 
 test:
-	md5sum  $(MODULEPATH)/$(TARGET) ./$(TARGET)
+	md5sum  $(MODULEPATH)/$(TARGET) ./$(TARGET) || :
 	zabbix_get -s 127.0.0.1 -k net.tcp.count[]
 	ss -a -t -n |tail -n+2 |wc -l
 	zabbix_get -s 127.0.0.1 -k net.tcp.count[10050]
