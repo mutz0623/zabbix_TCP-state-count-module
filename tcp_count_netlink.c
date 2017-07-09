@@ -1,4 +1,4 @@
-/* 
+/*
  * zabbix_TCP-state-count-module
  *
  * zabbix loadable module for aggregating TCP sessions.
@@ -64,8 +64,8 @@ ssize_t send_request(int fd, int src_port, int dst_port, int port_state){
 
 	iov.iov_base = &send_msg;
 	iov.iov_len = sizeof(send_msg);
-	
-	msg = (struct msghdr) {	
+
+	msg = (struct msghdr) {
 	        .msg_name = (void*)&nladdr,
 	        .msg_namelen = sizeof(nladdr),
 	        .msg_iov = &iov,
@@ -85,7 +85,7 @@ int recv_and_count(int fd, int *counter ){
 	struct msghdr rcv_msg;
 	char buf[32768];
 	int msglen;
-	
+
 	struct nlmsghdr *h ;
 	struct inet_diag_msg *r;
 
@@ -99,7 +99,7 @@ int recv_and_count(int fd, int *counter ){
 	iov.iov_base = &buf;
 	iov.iov_len = sizeof(buf);
 
-	rcv_msg = (struct msghdr) {	
+	rcv_msg = (struct msghdr) {
 	        .msg_name = (void*)&nladdr,
 	        .msg_namelen = sizeof(nladdr),
 	        .msg_iov = &iov,
@@ -134,7 +134,7 @@ int recv_and_count(int fd, int *counter ){
 			r = NLMSG_DATA(h);
 
 			if ( counter != NULL ){
-	
+
 				counter[r->idiag_state] += 1;
 
 				zabbix_log(LOG_LEVEL_DEBUG, "[%s] in function %s %d@%s recv_status<0, %d %d",
@@ -187,7 +187,7 @@ int get_port_count(int *ret_count, int src_port, int dst_port, int port_state, i
 			zabbix_log(LOG_LEVEL_DEBUG, "[%s] in function %s %d@%s enabled state counter %d -> %d",
 			             MODULE_NAME, __FUNCTION__, __LINE__, __FILE__, i, *( counter + i ) );
 		}
-	}                       		
+	}
 
 
 	close(sock_fd);
