@@ -181,7 +181,7 @@ int get_port_count(int *ret_count, int src_port, int dst_port, int port_state, i
 
 	*ret_count = recv_and_count( sock_fd, counter );
 
-	if ( counter  != NULL ){
+	if ( SUCCEED == zabbix_check_log_level(LOG_LEVEL_DEBUG) && counter != NULL ){
 		int i= 0;
 		for(i=1;i<TCP_STATE_NUM;i++){
 			zabbix_log(LOG_LEVEL_DEBUG, "[%s] in function %s %d@%s enabled state counter %d -> %d",
