@@ -25,7 +25,7 @@ int state_to_flag(int num){
 
 int open_sock(void){
 
-	zabbix_log(LOG_LEVEL_DEBUG, "[%s] In %s() %s:$d",
+	zabbix_log(LOG_LEVEL_DEBUG, "[%s] In %s() %s:%d",
 	           MODULE_NAME, __FUNCTION__, __FILE__, __LINE__);
 
 	return socket(AF_NETLINK, SOCK_RAW, NETLINK_INET_DIAG);
@@ -44,7 +44,7 @@ ssize_t send_request(int fd, int src_port, int dst_port, int port_state){
 	} send_msg;
 
 
-	zabbix_log(LOG_LEVEL_DEBUG, "[%s] In %s() %s:$d",
+	zabbix_log(LOG_LEVEL_DEBUG, "[%s] In %s() %s:%d",
 	           MODULE_NAME, __FUNCTION__, __FILE__, __LINE__);
 
 	memset(&nladdr, 0, sizeof(nladdr) );
@@ -90,7 +90,7 @@ int recv_and_count(int fd){
 	struct inet_diag_msg *r;
 
 
-	zabbix_log(LOG_LEVEL_DEBUG, "[%s] In %s() %s:$d",
+	zabbix_log(LOG_LEVEL_DEBUG, "[%s] In %s() %s:%d",
 	           MODULE_NAME, __FUNCTION__, __FILE__, __LINE__);
 
 	memset(&nladdr, 0, sizeof(nladdr) );
@@ -149,22 +149,22 @@ int get_port_count(int *ret_count, int src_port, int dst_port, int port_state){
 	int sock_fd;
 
 
-	zabbix_log(LOG_LEVEL_DEBUG, "[%s] In %s() %s:$d",
+	zabbix_log(LOG_LEVEL_DEBUG, "[%s] In %s() %s:%d",
 	           MODULE_NAME, __FUNCTION__, __FILE__, __LINE__);
 
 	sock_fd = open_sock();
 	if( sock_fd < 0 ){
 
-		zabbix_log(LOG_LEVEL_DEBUG, "[%s] in function %s %d@%s open_sock() fail",
-	                   MODULE_NAME, __FUNCTION__, __LINE__, __FILE__);
+		zabbix_log(LOG_LEVEL_DEBUG, "[%s] In %s() %s:%d open_sock() fail",
+	                   MODULE_NAME, __FUNCTION__, __FILE__, __LINE__);
 
 		return SYSINFO_RET_FAIL;
 	}
 
 	if( 0 > send_request( sock_fd, src_port, dst_port, port_state ) ){
 
-		zabbix_log(LOG_LEVEL_DEBUG, "[%s] in function %s %d@%s send_request() fail",
-	                   MODULE_NAME, __FUNCTION__, __LINE__, __FILE__);
+		zabbix_log(LOG_LEVEL_DEBUG, "[%s] In %s() %s:%d send_request() fail",
+	                   MODULE_NAME, __FUNCTION__, __FILE__, __LINE__);
 
 		close(sock_fd);
 		return SYSINFO_RET_FAIL;
