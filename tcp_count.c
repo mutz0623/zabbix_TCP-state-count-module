@@ -323,7 +323,7 @@ int	zbx_module_NET_TCP_COUNT_BULK(AGENT_REQUEST *request, AGENT_RESULT *result)
 		zbx_json_adduint64(&json, "{#TCP sock count}", counter[i]);
 		zbx_json_close(&json);
 
-		zabbix_log(LOG_LEVEL_WARNING, "[%s] (%s() %s:%d) %d -> %d (total %d)",
+		zabbix_log(LOG_LEVEL_WARNING, "[%s] In %s() %s:%d %d -> %d (total %d)",
 		            MODULE_NAME, __FUNCTION__,  __FILE__, __LINE__, i, counter[i], count );
 	}
 	
