@@ -11,7 +11,8 @@
 #include "tcp_count_netlink.h"
 
 
-int state_to_flag(int num){
+int state_to_flag(int num)
+{
 
 	if( num == 0 ){
 		return 0xfff;
@@ -23,7 +24,8 @@ int state_to_flag(int num){
 }
 
 
-int open_sock(void){
+int open_sock(void)
+{
 
 	zabbix_log(LOG_LEVEL_DEBUG, "[%s] In %s() %s:%d",
 	           MODULE_NAME, __FUNCTION__, __FILE__, __LINE__);
@@ -32,7 +34,8 @@ int open_sock(void){
 }
 
 
-ssize_t send_request(int fd, int src_port, int dst_port, int port_state){
+ssize_t send_request(int fd, int src_port, int dst_port, int port_state)
+{
 
 	struct sockaddr_nl nladdr;
 	struct msghdr msg;
@@ -76,7 +79,9 @@ ssize_t send_request(int fd, int src_port, int dst_port, int port_state){
 }
 
 
-int recv_and_count(int fd){
+int recv_and_count(int fd)
+{
+
 	int count_state = 0;
 
 	int recv_status;
@@ -144,7 +149,8 @@ int recv_and_count(int fd){
 }
 
 
-int get_port_count(int *ret_count, int src_port, int dst_port, int port_state){
+int get_port_count(int *ret_count, int src_port, int dst_port, int port_state)
+{
 
 	int sock_fd;
 
@@ -176,6 +182,4 @@ int get_port_count(int *ret_count, int src_port, int dst_port, int port_state){
 
 	return SYSINFO_RET_OK;
 }
-
-
 
