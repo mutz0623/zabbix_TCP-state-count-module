@@ -115,8 +115,8 @@ int recv_and_count(int fd){
 		recv_status = recvmsg(fd, &rcv_msg, 0);
 
 		if( recv_status < 0 ){
-			zabbix_log(LOG_LEVEL_DEBUG, "[%s] in function %s %d@%s recv_status<0",
-        		           MODULE_NAME, __FUNCTION__, __LINE__, __FILE__);
+			zabbix_log(LOG_LEVEL_DEBUG, "[%s] In %s() %s:%d recv_status<0",
+			           MODULE_NAME, __FUNCTION__, __FILE__, __LINE__);
 
 			return -1;
 		}
