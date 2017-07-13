@@ -23,7 +23,8 @@ int state_to_flag(int num){
 }
 
 
-int open_sock(void){
+int open_sock(void)
+{
 
 	zabbix_log(LOG_LEVEL_DEBUG, "[%s] In %s() %s:%d",
 	           MODULE_NAME, __FUNCTION__, __FILE__, __LINE__);
@@ -32,7 +33,8 @@ int open_sock(void){
 }
 
 
-ssize_t send_request(int fd, int src_port, int dst_port, int port_state){
+ssize_t send_request(int fd, int src_port, int dst_port, int port_state)
+{
 
 	struct sockaddr_nl nladdr;
 	struct msghdr msg;
@@ -76,7 +78,8 @@ ssize_t send_request(int fd, int src_port, int dst_port, int port_state){
 }
 
 
-int recv_and_count(int fd, int *counter ){
+int recv_and_count(int fd, int *counter )
+{
 	int count_state = 0;
 
 	int recv_status;
@@ -154,7 +157,8 @@ int recv_and_count(int fd, int *counter ){
 }
 
 
-int get_port_count(int *ret_count, int src_port, int dst_port, int port_state, int *counter){
+int get_port_count(int *ret_count, int src_port, int dst_port, int port_state, int *counter)
+{
 
 	int sock_fd;
 
@@ -182,7 +186,8 @@ int get_port_count(int *ret_count, int src_port, int dst_port, int port_state, i
 
 	*ret_count = recv_and_count( sock_fd, counter );
 
-	if ( SUCCEED == zabbix_check_log_level(LOG_LEVEL_DEBUG) && counter != NULL ){
+	if ( SUCCEED == zabbix_check_log_level(LOG_LEVEL_DEBUG) &&
+	     counter != NULL ){
 		int i= 0;
 		for(i=1;i<TCP_STATE_NUM;i++){
 			zabbix_log(LOG_LEVEL_DEBUG, "[%s] In %s() %s:%d state counter %d -> %d",
