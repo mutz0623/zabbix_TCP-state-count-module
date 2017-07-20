@@ -137,6 +137,8 @@ int recv_and_count(int fd)
 			}
 
 			r = NLMSG_DATA(h);
+			zabbix_log(LOG_LEVEL_DEBUG, "[%s] In %s() %s:%d r->idiag_state :%d",
+			           MODULE_NAME, __FUNCTION__, __FILE__, __LINE__, r->idiag_state);
 
 			count_state ++;
 

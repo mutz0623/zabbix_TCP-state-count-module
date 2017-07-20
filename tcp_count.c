@@ -118,6 +118,7 @@ int	zbx_module_NET_TCP_COUNT(AGENT_REQUEST *request, AGENT_RESULT *result)
 	int	dst_port = 0;
 	int	port_state = 0;
 	char	*port_state_tmp = NULL;
+	char	*tmp;
 
 	int	count = 0;
 	int	ret = SYSINFO_RET_FAIL;
@@ -131,22 +132,49 @@ int	zbx_module_NET_TCP_COUNT(AGENT_REQUEST *request, AGENT_RESULT *result)
 
 	}else if (request->nparam == 1){
 
-		src_port = atoi( get_rparam(request, 0) );
+		tmp = get_rparam(request, 0);
+		if ( NULL == tmp ){
+			SET_MSG_RESULT(result, strdup("get_rparam() failed(returned NULL)"));
+			return SYSINFO_RET_FAIL;
+		}
+		src_port = atoi( tmp );
 
 		dst_port = 0;
 		port_state = 0;
 
 	}else if (request->nparam == 2){
 
-		src_port = atoi( get_rparam(request, 0) );
-		dst_port = atoi( get_rparam(request, 1) );
+		tmp = get_rparam(request, 0);
+		if ( NULL == tmp ){
+			SET_MSG_RESULT(result, strdup("get_rparam() failed(returned NULL)"));
+			return SYSINFO_RET_FAIL;
+		}
+		src_port = atoi( tmp );
+
+		tmp = get_rparam(request, 1);
+		if ( NULL == tmp ){
+			SET_MSG_RESULT(result, strdup("get_rparam() failed(returned NULL)"));
+			return SYSINFO_RET_FAIL;
+		}
+		dst_port = atoi( tmp );
 
 		port_state = 0;
 
 	}else if (request->nparam == 3){
 
-		src_port = atoi( get_rparam(request, 0) );
-		dst_port = atoi( get_rparam(request, 1) );
+		tmp = get_rparam(request, 0);
+		if ( NULL == tmp ){
+			SET_MSG_RESULT(result, strdup("get_rparam() failed(returned NULL)"));
+			return SYSINFO_RET_FAIL;
+		}
+		src_port = atoi( tmp );
+
+		tmp = get_rparam(request, 1);
+		if ( NULL == tmp ){
+			SET_MSG_RESULT(result, strdup("get_rparam() failed(returned NULL)"));
+			return SYSINFO_RET_FAIL;
+		}
+		dst_port = atoi( tmp );
 
 		port_state_tmp = get_rparam(request, 2);
 		zabbix_log(LOG_LEVEL_DEBUG, "[%s] specified 3rd param str [%s] (%s:%d)",
