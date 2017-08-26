@@ -22,6 +22,7 @@ clean:
 
 install:$(TARGET)
 	service zabbix-agent stop
+	install -d $(MODULEPATH)
 	install -C $(TARGET) $(MODULEPATH)
 	service zabbix-agent start
 	service zabbix-agent status
