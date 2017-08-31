@@ -56,5 +56,26 @@ $ sudo service zabbix-agent restart
 
 set item key "net.tcp.count[\<src port\>,\<dest port\>,\<state\>]" in your zabbix server
 
+## misc
 
+- In situation enable SELinux, need additional SELinux rule.  
+for example below.
+
+```
+cat <<EOT >zabbix-TCPcount-rule.te
+module zabbix-TCPcount-rule 1.0;
+
+require {
+        type zabbix_agent_t;
+        class netlink_tcpdiag_socket { create nlmsg_read read write };
+}
+
+#============= zabbix_agent_t ==============
+allow zabbix_agent_t self:netlink_tcpdiag_socket { read write };
+allow zabbix_agent_t self:netlink_tcpdiag_socket { create nlmsg_read };
+EOT
+
+make -f /usr/share/selinux/devel/Makefile zabbix-TCPcount-rule.pp
+semodule -i zabbix-TCPcount-rule.pp
+```
 
