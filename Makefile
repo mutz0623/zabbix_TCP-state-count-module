@@ -37,20 +37,13 @@ test:
 	ss dport = :10050 -a -t -n |tail -n+2 |wc -l
 	zabbix_get -s 127.0.0.1 -k net.tcp.count[,,LISTEN]
 	ss state listening -a -t -n |tail -n+2 |wc -l
+	zabbix_get -s 127.0.0.1 -k net.tcp.count.bulk |jq .
 
 
 test2:
-	zabbix_get -s 127.0.0.1 -k net.tcp.count.bulk[80]
-	ss state established sport = :80 -a -t -n | tail -n +2 |wc -l
-	ss state syn-sent sport = :80 -a -t -n | tail -n +2 |wc -l
-	ss state syn-recv sport = :80 -a -t -n | tail -n +2 |wc -l
-	ss state fin-wait-1 sport = :80 -a -t -n | tail -n +2 |wc -l
-	ss state fin-wait-2 sport = :80 -a -t -n | tail -n +2 |wc -l
-	ss state time-wait sport = :80 -a -t -n | tail -n +2 |wc -l
-	ss state closed sport = :80 -a -t -n | tail -n +2 |wc -l
-	ss state close-wait sport = :80 -a -t -n | tail -n +2 |wc -l
-	ss state last-ack sport = :80 -a -t -n | tail -n +2 |wc -l
-	ss state listening sport = :80 -a -t -n | tail -n +2 |wc -l
-	ss state closing sport = :80 -a -t -n | tail -n +2 |wc -l
+	ss sport = :10051 -a -t -n |awk 'NR>1{count[$$1]++} END{for(key in count){print key,count[key]} }'
+	zabbix_get -s 127.0.0.1 -k net.tcp.count.bulk[10051] |jq .
+	ss dport = :10050 -a -t -n |awk 'NR>1{count[$$1]++} END{for(key in count){print key,count[key]} }'
+	zabbix_get -s 127.0.0.1 -k net.tcp.count.bulk[,10050] |jq .
 
 
