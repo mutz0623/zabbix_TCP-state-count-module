@@ -293,6 +293,7 @@ int	zbx_module_NET_TCP_COUNT_BULK(AGENT_REQUEST *request, AGENT_RESULT *result)
 	int	dst_port = 0;
 	int	port_state = 0;
 	char	*port_state_tmp = NULL;
+	char	*port_tmp = NULL;
 
 	int	count = 0;
 	int	ret = SYSINFO_RET_FAIL;
@@ -311,15 +312,31 @@ int	zbx_module_NET_TCP_COUNT_BULK(AGENT_REQUEST *request, AGENT_RESULT *result)
 
 	}else if (request->nparam == 1){
 
-		src_port = atoi( get_rparam(request, 0) );
+		port_tmp = get_rparam(request, 0);
+		if ( NULL == port_tmp ){
+			SET_MSG_RESULT(result, strdup("get_rparam() failed(returned NULL)"));
+			return SYSINFO_RET_FAIL;
+		}
+		src_port = atoi( port_tmp );
 
 		dst_port = 0;
 		port_state = 0;
 
 	}else if (request->nparam == 2){
 
-		src_port = atoi( get_rparam(request, 0) );
-		dst_port = atoi( get_rparam(request, 1) );
+		port_tmp = get_rparam(request, 0);
+		if ( NULL == port_tmp ){
+			SET_MSG_RESULT(result, strdup("get_rparam() failed(returned NULL)"));
+			return SYSINFO_RET_FAIL;
+		}
+		src_port = atoi( port_tmp );
+
+		port_tmp = get_rparam(request, 1);
+		if ( NULL == port_tmp ){
+			SET_MSG_RESULT(result, strdup("get_rparam() failed(returned NULL)"));
+			return SYSINFO_RET_FAIL;
+		}
+		dst_port = atoi( port_tmp );
 
 		port_state = 0;
 
