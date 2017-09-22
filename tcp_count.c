@@ -45,6 +45,20 @@ extern unsigned char program_type ;
 /* the variable keeps timeout setting for item processing */
 static int	item_timeout = 0;
 
+static char *TCPstate_str[] = {
+                   "NOTtoUSE",
+                   "ESTABLISHED",
+                   "SYN_SENT",
+                   "SYN_RECV",
+                   "FIN_WAIT1",
+                   "FIN_WAIT2",
+                   "TIME_WAIT",
+                   "CLOSE",
+                   "CLOSE_WAIT",
+                   "LAST_ACK",
+                   "LISTEN",
+                   "CLOSING" };
+
 int	zbx_module_NET_TCP_COUNT(AGENT_REQUEST *request, AGENT_RESULT *result);
 int	zbx_module_NET_TCP_COUNT_BULK(AGENT_REQUEST *request, AGENT_RESULT *result);
 
@@ -310,26 +324,23 @@ int	zbx_module_NET_TCP_COUNT_BULK(AGENT_REQUEST *request, AGENT_RESULT *result)
 
 
 	zbx_json_init(&json, ZBX_JSON_STAT_BUF_LEN);
-	zbx_json_addarray(&json, ZBX_PROTO_TAG_DATA);
-	
-	zbx_json_addobject(&json, NULL);
-	zbx_json_adduint64(&json, "{#TCP sock count ALL}", count);
-	zbx_json_close(&json);
-	
+
+	zbx_json_adduint64(&json, "LocalPort", src_port);
+	zbx_json_adduint64(&json, "RemotePort", dst_port);
+	zbx_json_adduint64(&json, "CountAll", count);
+
 	int i;
 	for(i=1;i<TCP_STATE_NUM;i++){
-		zbx_json_addobject(&json, NULL);
-		zbx_json_adduint64(&json, "{#TCP sock state}", i);
-		zbx_json_adduint64(&json, "{#TCP sock count}", counter[i]);
-		zbx_json_close(&json);
+		zbx_json_adduint64(&json, TCPstate_str[i], counter[i]);
 
 		zabbix_log(LOG_LEVEL_WARNING, "[%s] In %s() %s:%d %d -> %d (total %d)",
 		            MODULE_NAME, __FUNCTION__,  __FILE__, __LINE__, i, counter[i], count );
 	}
-	
+
+
 	zbx_json_close(&json);
 	SET_STR_RESULT(result, zbx_strdup(result->str, json.buffer));
-	
+
 	zbx_json_free(&json);
 
 	return SYSINFO_RET_OK;
