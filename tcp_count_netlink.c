@@ -1,4 +1,4 @@
-/* 
+/*
  * zabbix_TCP-state-count-module
  *
  * zabbix loadable module for aggregating TCP sessions.
@@ -67,8 +67,8 @@ ssize_t send_request(int fd, int src_port, int dst_port, int port_state)
 
 	iov.iov_base = &send_msg;
 	iov.iov_len = sizeof(send_msg);
-	
-	msg = (struct msghdr) {	
+
+	msg = (struct msghdr) {
 	        .msg_name = (void*)&nladdr,
 	        .msg_namelen = sizeof(nladdr),
 	        .msg_iov = &iov,
@@ -79,9 +79,8 @@ ssize_t send_request(int fd, int src_port, int dst_port, int port_state)
 }
 
 
-int recv_and_count(int fd)
+int recv_and_count(int fd, int *counter )
 {
-
 	int count_state = 0;
 
 	int recv_status;
@@ -90,7 +89,7 @@ int recv_and_count(int fd)
 	struct msghdr rcv_msg;
 	char buf[32768];
 	int msglen;
-	
+
 	struct nlmsghdr *h ;
 	struct inet_diag_msg *r;
 
@@ -104,7 +103,7 @@ int recv_and_count(int fd)
 	iov.iov_base = &buf;
 	iov.iov_len = sizeof(buf);
 
-	rcv_msg = (struct msghdr) {	
+	rcv_msg = (struct msghdr) {
 	        .msg_name = (void*)&nladdr,
 	        .msg_namelen = sizeof(nladdr),
 	        .msg_iov = &iov,
@@ -140,6 +139,16 @@ int recv_and_count(int fd)
 			zabbix_log(LOG_LEVEL_DEBUG, "[%s] In %s() %s:%d r->idiag_state :%d",
 			           MODULE_NAME, __FUNCTION__, __FILE__, __LINE__, r->idiag_state);
 
+			if ( counter != NULL ){
+
+				counter[r->idiag_state] += 1;
+
+				zabbix_log(LOG_LEVEL_DEBUG, "[%s] In %s() %s:%d recv_status<0, %d %d",
+        			           MODULE_NAME, __FUNCTION__, __FILE__, __LINE__, 
+				           r->idiag_state,counter[r->idiag_state]);
+
+			}
+
 			count_state ++;
 
 			h = NLMSG_NEXT(h, msglen);
@@ -151,7 +160,7 @@ int recv_and_count(int fd)
 }
 
 
-int get_port_count(int *ret_count, int src_port, int dst_port, int port_state)
+int get_port_count(int *ret_count, int src_port, int dst_port, int port_state, int *counter)
 {
 
 	int sock_fd;
@@ -178,7 +187,17 @@ int get_port_count(int *ret_count, int src_port, int dst_port, int port_state)
 		return SYSINFO_RET_FAIL;
 	}
 
-	*ret_count = recv_and_count( sock_fd );
+	*ret_count = recv_and_count( sock_fd, counter );
+
+	if ( SUCCEED == zabbix_check_log_level(LOG_LEVEL_DEBUG) &&
+	     counter != NULL ){
+		int i= 0;
+		for(i=1;i<TCP_STATE_NUM;i++){
+			zabbix_log(LOG_LEVEL_DEBUG, "[%s] In %s() %s:%d state counter %d -> %d",
+			             MODULE_NAME, __FUNCTION__, __FILE__,  __LINE__, i, *( counter + i ) );
+		}
+	}
+
 
 	close(sock_fd);
 

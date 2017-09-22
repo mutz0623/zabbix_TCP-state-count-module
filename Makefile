@@ -38,5 +38,13 @@ test:
 	ss dport = :10050 -a -t -n |tail -n+2 |wc -l
 	zabbix_get -s 127.0.0.1 -k net.tcp.count[,,LISTEN]
 	ss state listening -a -t -n |tail -n+2 |wc -l
+	zabbix_get -s 127.0.0.1 -k net.tcp.count.bulk |jq .
+
+
+test2:
+	ss sport = :10051 -a -t -n |awk 'NR>1{count[$$1]++} END{for(key in count){print key,count[key]} }'
+	zabbix_get -s 127.0.0.1 -k net.tcp.count.bulk[10051] |jq .
+	ss dport = :10050 -a -t -n |awk 'NR>1{count[$$1]++} END{for(key in count){print key,count[key]} }'
+	zabbix_get -s 127.0.0.1 -k net.tcp.count.bulk[,10050] |jq .
 
 
