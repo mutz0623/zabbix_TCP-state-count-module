@@ -5,6 +5,8 @@ zabbix loadable module for aggregating TCP sessions.
 # Requirements
 
 - zabbix 3.0 or later
+    - In 3.4 or later, you can use "dependent item"  
+https://www.zabbix.com/documentation/3.4/manual/config/items/itemtypes/dependent_items
 - Linux
 
 # How to use
