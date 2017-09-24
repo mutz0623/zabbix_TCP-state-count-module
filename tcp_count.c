@@ -1,4 +1,4 @@
-/* 
+/*
  * zabbix_TCP-state-count-module
  *
  * zabbix loadable module for aggregating TCP sessions.
@@ -245,7 +245,7 @@ int	zbx_module_NET_TCP_COUNT(AGENT_REQUEST *request, AGENT_RESULT *result)
 	}
 
 
-	zabbix_log(LOG_LEVEL_DEBUG, 
+	zabbix_log(LOG_LEVEL_DEBUG,
 	           "[%s] specified srcport,destport,state => %d,%d,%s(%d) (%s:%d)",
 	           MODULE_NAME, src_port, dst_port, port_state_tmp, port_state, __FILE__, __LINE__);
 
@@ -346,7 +346,7 @@ int	zbx_module_NET_TCP_COUNT_BULK(AGENT_REQUEST *request, AGENT_RESULT *result)
 	}
 
 
-	zabbix_log(LOG_LEVEL_DEBUG, 
+	zabbix_log(LOG_LEVEL_DEBUG,
 	           "[%s] specified srcport,destport,state => %d,%d,%s(%d) (%s:%d)",
 	           MODULE_NAME, src_port, dst_port, port_state_tmp, port_state, __FILE__, __LINE__);
 
