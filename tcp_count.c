@@ -378,7 +378,7 @@ int	zbx_module_NET_TCP_COUNT_BULK(AGENT_REQUEST *request, AGENT_RESULT *result)
 	for(i=1;i<TCP_STATE_NUM;i++){
 		zbx_json_adduint64(&json, TCPstate_str[i], counter[i]);
 
-		zabbix_log(LOG_LEVEL_WARNING, "[%s] In %s() %s:%d %d -> %d (total %d)",
+		zabbix_log(LOG_LEVEL_DEBUG, "[%s] In %s() %s:%d %d -> %d (total %d)",
 		            MODULE_NAME, __FUNCTION__,  __FILE__, __LINE__, i, counter[i], count );
 	}
 
