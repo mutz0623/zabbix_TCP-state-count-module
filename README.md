@@ -64,6 +64,7 @@ set item key "net.tcp.count[\<src port\>,\<dest port\>,\<state\>]" in your zabbi
 for example below.
 
 ```
+yum install selinux-policy-devel
 cat <<EOT >zabbix-TCPcount-rule.te
 module zabbix-TCPcount-rule 1.0;
 
