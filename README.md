@@ -11,18 +11,18 @@ https://www.zabbix.com/documentation/3.4/manual/config/items/itemtypes/dependent
 
 # How to use
 
-Below is example for zabbix 3.0.5; but now already released newer version.
-Please replace correct version for your environment.
+Below is example for Zabbix 4.0.X; but now already newer version may have been released.
+Please replace with equal version as your Zabbix agent.
 
 downlaod and extract zabbix source code
 ```
-$ wget  http://downloads.sourceforge.net/project/zabbix/ZABBIX%20Latest%20Stable/3.0.5/zabbix-3.0.5.tar.gz
-$ tar zxf zabbix-3.0.5.tar.gz
+$ wget  http://downloads.sourceforge.net/project/zabbix/ZABBIX%20Latest%20Stable/4.0.X/zabbix-4.0.X.tar.gz
+$ tar zxf zabbix-4.0.X.tar.gz
 ```
 
 create symlink for zabbix source dir
 ```
-$ ln -s zabbix-3.0.5 zabbix-src
+$ ln -s zabbix-4.0.X zabbix-src
 ```
 
 execute cofigrure
