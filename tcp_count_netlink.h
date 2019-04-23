@@ -17,6 +17,8 @@
 
 #define MODULE_NAME "tcp_count.so"
 
+#define zabbix_check_log_level(X) ZBX_CHECK_LOG_LEVEL(X)
+
 #define TCP_STATE_NUM 12
 
 extern int get_port_count(int *, int , int , int , int *);
