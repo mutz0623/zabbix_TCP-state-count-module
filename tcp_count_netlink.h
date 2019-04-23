@@ -17,7 +17,9 @@
 
 #define MODULE_NAME "tcp_count.so"
 
+#ifdef ZBX_CHECK_LOG_LEVEL
 #define zabbix_check_log_level(X) ZBX_CHECK_LOG_LEVEL(X)
+#endif
 
 #define TCP_STATE_NUM 12
 
