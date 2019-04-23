@@ -406,24 +406,7 @@ int	zbx_module_NET_TCP_COUNT_BULK(AGENT_REQUEST *request, AGENT_RESULT *result)
  ******************************************************************************/
 int	zbx_module_init(void)
 {
-	int ret = ZBX_MODULE_FAIL;
-
-	switch (program_type){
-		case ZBX_PROGRAM_TYPE_SERVER:
-		case ZBX_PROGRAM_TYPE_PROXY_ACTIVE:
-		case ZBX_PROGRAM_TYPE_PROXY_PASSIVE:
-		case ZBX_PROGRAM_TYPE_PROXY:
-		case ZBX_PROGRAM_TYPE_AGENTD:
-			zabbix_log(LOG_LEVEL_DEBUG, "[%s] module loaded by %s process. [%d]",
-			           MODULE_NAME, get_program_type_string(program_type), program_type);
-			ret = ZBX_MODULE_OK;
-			break;
-		default:
-			zabbix_log(LOG_LEVEL_WARNING, "[%s] unknown value program_type [%d]", MODULE_NAME, program_type );
-	}
-
-
-	return ret;
+	return ZBX_MODULE_OK;
 }
 
 /******************************************************************************
