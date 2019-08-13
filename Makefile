@@ -1,6 +1,6 @@
 
 CC = gcc
-CFLAG = -Wall -O3
+CFLAG = -Wall -Wextra -O3
 SRC = tcp_count.c tcp_count_netlink.c
 HDR = tcp_count_netlink.h
 OBJ = $(SRC:%.c=%.o)

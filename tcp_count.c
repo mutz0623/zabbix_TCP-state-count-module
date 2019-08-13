@@ -67,7 +67,7 @@ static ZBX_METRIC keys[] =
 {
 	{"net.tcp.count",	CF_HAVEPARAMS,	zbx_module_NET_TCP_COUNT, "80,0,LISTEN"},
 	{"net.tcp.count.bulk",	CF_HAVEPARAMS,	zbx_module_NET_TCP_COUNT_BULK, "80,0"},
-	{NULL}
+	{NULL, 0, 0, NULL}
 };
 
 /******************************************************************************

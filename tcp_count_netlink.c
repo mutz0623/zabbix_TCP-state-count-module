@@ -88,7 +88,7 @@ int recv_and_count(int fd, int *counter )
 	struct iovec iov;
 	struct msghdr rcv_msg;
 	char buf[32768];
-	int msglen;
+	unsigned int msglen;
 
 	struct nlmsghdr *h ;
 	struct inet_diag_msg *r;
