@@ -63,8 +63,7 @@ doc-clean:
 	-rm -rf ./doc/html/
 
 .PHONY : scan-build scan-build-clean
-scan-build:
-	$(MAKE) clean
+scan-build:clean
 	-mkdir -p ./doc/scan-build/
 	scan-build -o ./doc/scan-build/ $(MAKE)
 
