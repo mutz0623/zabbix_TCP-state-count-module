@@ -1,3 +1,5 @@
-tcp_count.so
-tcp_count_netlink.o
-tcp_count.o
+bin/tcp_count.so
+obj/*.d
+obj/*.o
+doc/html/*
+doc/scan-build/*
